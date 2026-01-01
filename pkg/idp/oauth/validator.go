@@ -16,9 +16,10 @@ package oauth
 
 import (
 	"fmt"
-	jwtlib "github.com/golang-jwt/jwt/v4"
 	"github.com/constXife/go-authcrunch/pkg/errors"
 	"github.com/constXife/go-authcrunch/pkg/kms"
+	jwtlib "github.com/golang-jwt/jwt/v4"
+	"go.uber.org/zap"
 	"strings"
 )
 
@@ -68,9 +69,19 @@ func (b *IdentityProvider) validateAccessToken(state string, data map[string]int
 		key, exists := b.keys[keyID]
 		if !exists {
 			if !b.disableKeyVerification {
+				b.logger.Warn(
+					"jwks key id not found, forcing refresh",
+					zap.String("identity_provider_name", b.config.Name),
+					zap.String("kid", keyID),
+				)
 				if err := b.fetchKeysURL(); err != nil {
 					return nil, errors.ErrIdentityProviderOauthKeyFetchFailed.WithArgs(err)
 				}
+				b.logger.Debug(
+					"jwks keys refreshed",
+					zap.String("identity_provider_name", b.config.Name),
+					zap.Strings("jwks_kids", b.getJwksKeyIDs()),
+				)
 			}
 			key, exists = b.keys[keyID]
 			if !exists {

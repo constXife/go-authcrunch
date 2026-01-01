@@ -24,6 +24,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 )
@@ -396,6 +397,15 @@ func (b *IdentityProvider) countFetchKeysAttempt() {
 	b.lastKeyFetch = time.Now().UTC()
 	b.keyFetchAttempts++
 	return
+}
+
+func (b *IdentityProvider) getJwksKeyIDs() []string {
+	ids := make([]string, 0, len(b.keys))
+	for kid := range b.keys {
+		ids = append(ids, kid)
+	}
+	sort.Strings(ids)
+	return ids
 }
 
 func (b *IdentityProvider) fetchKeysURL() error {
