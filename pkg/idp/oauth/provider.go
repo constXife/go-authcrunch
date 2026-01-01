@@ -325,6 +325,12 @@ func (b *IdentityProvider) fetchConfig() error {
 	}
 
 	if !b.disableKeyVerification {
+		b.logger.Info("fetching jwks keys",
+			zap.String("identity_provider_name", b.config.Name),
+			zap.String("jwks_url", b.keysURL),
+			zap.Int("retry_attempts", b.config.RetryAttempts),
+			zap.Int("retry_interval", b.config.RetryInterval),
+		)
 		if b.config.RetryAttempts > 0 {
 			for i := 0; i < b.config.RetryAttempts; i++ {
 				err := b.fetchKeysURL()
