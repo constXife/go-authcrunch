@@ -464,11 +464,38 @@ func (b *IdentityProvider) fetchKeysURL() error {
 		return errors.ErrIdentityProviderOauthJwksKeysNotFound
 	}
 
+	validKeys := 0
 	for _, k := range keys {
 		if err := k.Validate(); err != nil {
-			return errors.ErrIdentityProviderOauthJwksInvalidKey.WithArgs(err)
+			b.logger.Warn("jwks key skipped",
+				zap.String("identity_provider_name", b.config.Name),
+				zap.String("jwks_url", b.keysURL),
+				zap.String("kid", k.KeyID),
+				zap.String("kty", k.KeyType),
+				zap.String("crv", k.Curve),
+				zap.String("alg", k.Algorithm),
+				zap.String("use", k.PublicKeyUse),
+				zap.Error(err),
+			)
+			continue
+		}
+		if k.PublicKeyUse == "enc" {
+			b.logger.Debug("jwks key skipped due to use=enc",
+				zap.String("identity_provider_name", b.config.Name),
+				zap.String("jwks_url", b.keysURL),
+				zap.String("kid", k.KeyID),
+				zap.String("kty", k.KeyType),
+				zap.String("crv", k.Curve),
+				zap.String("alg", k.Algorithm),
+			)
+			continue
 		}
 		b.keys[k.KeyID] = k
+		validKeys++
+	}
+
+	if validKeys == 0 {
+		return errors.ErrIdentityProviderOauthJwksInvalidKey.WithArgs("no supported jwks keys after validation")
 	}
 
 	b.logger.Info("jwks keys updated",
