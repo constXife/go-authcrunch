@@ -18,11 +18,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/greenpau/go-authcrunch/pkg/authn/enums/operator"
-	"github.com/greenpau/go-authcrunch/pkg/authproxy"
-	"github.com/greenpau/go-authcrunch/pkg/errors"
-	"github.com/greenpau/go-authcrunch/pkg/requests"
-	"github.com/greenpau/go-authcrunch/pkg/user"
+	"github.com/constXife/go-authcrunch/pkg/authn/enums/operator"
+	"github.com/constXife/go-authcrunch/pkg/authproxy"
+	"github.com/constXife/go-authcrunch/pkg/errors"
+	"github.com/constXife/go-authcrunch/pkg/requests"
+	"github.com/constXife/go-authcrunch/pkg/user"
 	"go.uber.org/zap"
 )
 

@@ -15,7 +15,7 @@
 package kms
 
 import (
-	"github.com/greenpau/go-authcrunch/internal/tests"
+	"github.com/constXife/go-authcrunch/internal/tests"
 	"testing"
 )
 

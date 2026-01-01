@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/greenpau/go-authcrunch/pkg/authn/enums/role"
-	"github.com/greenpau/go-authcrunch/pkg/user"
+	"github.com/constXife/go-authcrunch/pkg/authn/enums/role"
+	"github.com/constXife/go-authcrunch/pkg/user"
 )
 
 func (p *Portal) authorizedRole(usr *user.User, authorizedRoles []role.Kind, authenticated bool) error {

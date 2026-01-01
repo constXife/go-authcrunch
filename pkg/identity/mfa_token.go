@@ -34,10 +34,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/greenpau/go-authcrunch/pkg/errors"
-	"github.com/greenpau/go-authcrunch/pkg/requests"
-	"github.com/greenpau/go-authcrunch/pkg/tagging"
-	"github.com/greenpau/go-authcrunch/pkg/util"
+	"github.com/constXife/go-authcrunch/pkg/errors"
+	"github.com/constXife/go-authcrunch/pkg/requests"
+	"github.com/constXife/go-authcrunch/pkg/tagging"
+	"github.com/constXife/go-authcrunch/pkg/util"
 )
 
 // MfaTokenBundle is a collection of public keys.

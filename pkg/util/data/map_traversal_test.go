@@ -17,7 +17,7 @@ package data
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/greenpau/go-authcrunch/internal/tests"
+	"github.com/constXife/go-authcrunch/internal/tests"
 	"testing"
 )
 

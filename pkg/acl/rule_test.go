@@ -20,9 +20,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/greenpau/go-authcrunch/internal/tests"
-	"github.com/greenpau/go-authcrunch/pkg/errors"
-	logutil "github.com/greenpau/go-authcrunch/pkg/util/log"
+	"github.com/constXife/go-authcrunch/internal/tests"
+	"github.com/constXife/go-authcrunch/pkg/errors"
+	logutil "github.com/constXife/go-authcrunch/pkg/util/log"
 )
 
 func TestNewAclRule(t *testing.T) {

@@ -22,13 +22,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/greenpau/go-authcrunch/pkg/authn/enums/role"
-	"github.com/greenpau/go-authcrunch/pkg/requests"
+	"github.com/constXife/go-authcrunch/pkg/authn/enums/role"
+	"github.com/constXife/go-authcrunch/pkg/requests"
 
 	"regexp"
 
-	"github.com/greenpau/go-authcrunch/pkg/user"
-	addrutil "github.com/greenpau/go-authcrunch/pkg/util/addr"
+	"github.com/constXife/go-authcrunch/pkg/user"
+	addrutil "github.com/constXife/go-authcrunch/pkg/util/addr"
 	"go.uber.org/zap"
 )
 

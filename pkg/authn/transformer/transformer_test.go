@@ -17,8 +17,8 @@ package transformer
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/greenpau/go-authcrunch/internal/tests"
-	"github.com/greenpau/go-authcrunch/pkg/acl"
+	"github.com/constXife/go-authcrunch/internal/tests"
+	"github.com/constXife/go-authcrunch/pkg/acl"
 	"testing"
 )
 

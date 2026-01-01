@@ -20,12 +20,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/greenpau/go-authcrunch/internal/tests"
-	"github.com/greenpau/go-authcrunch/internal/testutils"
-	"github.com/greenpau/go-authcrunch/pkg/authn/enums/operator"
-	"github.com/greenpau/go-authcrunch/pkg/errors"
-	"github.com/greenpau/go-authcrunch/pkg/requests"
-	logutil "github.com/greenpau/go-authcrunch/pkg/util/log"
+	"github.com/constXife/go-authcrunch/internal/tests"
+	"github.com/constXife/go-authcrunch/internal/testutils"
+	"github.com/constXife/go-authcrunch/pkg/authn/enums/operator"
+	"github.com/constXife/go-authcrunch/pkg/errors"
+	"github.com/constXife/go-authcrunch/pkg/requests"
+	logutil "github.com/constXife/go-authcrunch/pkg/util/log"
 	"go.uber.org/zap"
 )
 

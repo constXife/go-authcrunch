@@ -18,9 +18,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/greenpau/go-authcrunch/pkg/ids"
-	"github.com/greenpau/go-authcrunch/pkg/requests"
-	"github.com/greenpau/go-authcrunch/pkg/user"
+	"github.com/constXife/go-authcrunch/pkg/ids"
+	"github.com/constXife/go-authcrunch/pkg/requests"
+	"github.com/constXife/go-authcrunch/pkg/user"
 )
 
 // FetchDebug fetches debug information.

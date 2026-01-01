@@ -24,10 +24,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/greenpau/go-authcrunch/pkg/errors"
-	"github.com/greenpau/go-authcrunch/pkg/requests"
-	"github.com/greenpau/go-authcrunch/pkg/util"
-	fileutil "github.com/greenpau/go-authcrunch/pkg/util/file"
+	"github.com/constXife/go-authcrunch/pkg/errors"
+	"github.com/constXife/go-authcrunch/pkg/requests"
+	"github.com/constXife/go-authcrunch/pkg/util"
+	fileutil "github.com/constXife/go-authcrunch/pkg/util/file"
 	"github.com/greenpau/versioned"
 )
 
@@ -64,7 +64,7 @@ var apiKeyRegexPattern = regexp.MustCompile(`^[A-Za-z0-9]{64,72}$`)
 func init() {
 	app = versioned.NewPackageManager("authdb")
 	app.Description = "authdb"
-	app.Documentation = "https://github.com/greenpau/go-authcrunch"
+	app.Documentation = "https://github.com/constXife/go-authcrunch"
 	app.SetVersion(appVersion, "1.1.7")
 	app.SetGitBranch(gitBranch, "main")
 	app.SetGitCommit(gitCommit, "v1.1.6-1-g25b3ec7")

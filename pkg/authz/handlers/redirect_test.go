@@ -15,8 +15,8 @@
 package handlers
 
 import (
-	"github.com/greenpau/go-authcrunch/internal/tests"
-	"github.com/greenpau/go-authcrunch/pkg/requests"
+	"github.com/constXife/go-authcrunch/internal/tests"
+	"github.com/constXife/go-authcrunch/pkg/requests"
 	"net/http"
 	"testing"
 )

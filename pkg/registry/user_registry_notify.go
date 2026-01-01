@@ -16,9 +16,9 @@ package registry
 
 import (
 	"bytes"
-	"github.com/greenpau/go-authcrunch/pkg/credentials"
-	"github.com/greenpau/go-authcrunch/pkg/errors"
-	"github.com/greenpau/go-authcrunch/pkg/messaging"
+	"github.com/constXife/go-authcrunch/pkg/credentials"
+	"github.com/constXife/go-authcrunch/pkg/errors"
+	"github.com/constXife/go-authcrunch/pkg/messaging"
 	"mime/quotedprintable"
 	"strings"
 	"text/template"

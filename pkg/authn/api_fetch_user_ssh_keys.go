@@ -18,11 +18,11 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/greenpau/go-authcrunch/pkg/authn/enums/operator"
-	"github.com/greenpau/go-authcrunch/pkg/identity"
-	"github.com/greenpau/go-authcrunch/pkg/ids"
-	"github.com/greenpau/go-authcrunch/pkg/requests"
-	"github.com/greenpau/go-authcrunch/pkg/user"
+	"github.com/constXife/go-authcrunch/pkg/authn/enums/operator"
+	"github.com/constXife/go-authcrunch/pkg/identity"
+	"github.com/constXife/go-authcrunch/pkg/ids"
+	"github.com/constXife/go-authcrunch/pkg/requests"
+	"github.com/constXife/go-authcrunch/pkg/user"
 )
 
 // FetchUserSSHKeys fetches SSH keys from user identity.

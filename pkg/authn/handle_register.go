@@ -21,10 +21,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/greenpau/go-authcrunch/pkg/authn/validators"
-	"github.com/greenpau/go-authcrunch/pkg/requests"
-	"github.com/greenpau/go-authcrunch/pkg/util"
-	addrutil "github.com/greenpau/go-authcrunch/pkg/util/addr"
+	"github.com/constXife/go-authcrunch/pkg/authn/validators"
+	"github.com/constXife/go-authcrunch/pkg/requests"
+	"github.com/constXife/go-authcrunch/pkg/util"
+	addrutil "github.com/constXife/go-authcrunch/pkg/util/addr"
 	"go.uber.org/zap"
 )
 

@@ -19,9 +19,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/greenpau/go-authcrunch/pkg/authn/enums/role"
-	"github.com/greenpau/go-authcrunch/pkg/requests"
-	addrutil "github.com/greenpau/go-authcrunch/pkg/util/addr"
+	"github.com/constXife/go-authcrunch/pkg/authn/enums/role"
+	"github.com/constXife/go-authcrunch/pkg/requests"
+	addrutil "github.com/constXife/go-authcrunch/pkg/util/addr"
 	"go.uber.org/zap"
 )
 

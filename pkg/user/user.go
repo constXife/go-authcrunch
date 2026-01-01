@@ -21,9 +21,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/greenpau/go-authcrunch/pkg/errors"
-	cfgutil "github.com/greenpau/go-authcrunch/pkg/util/cfg"
-	datautil "github.com/greenpau/go-authcrunch/pkg/util/data"
+	"github.com/constXife/go-authcrunch/pkg/errors"
+	cfgutil "github.com/constXife/go-authcrunch/pkg/util/cfg"
+	datautil "github.com/constXife/go-authcrunch/pkg/util/data"
 )
 
 /*

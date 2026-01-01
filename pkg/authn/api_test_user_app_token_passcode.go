@@ -19,11 +19,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/greenpau/go-authcrunch/pkg/authn/enums/operator"
-	"github.com/greenpau/go-authcrunch/pkg/identity"
-	"github.com/greenpau/go-authcrunch/pkg/ids"
-	"github.com/greenpau/go-authcrunch/pkg/requests"
-	"github.com/greenpau/go-authcrunch/pkg/user"
+	"github.com/constXife/go-authcrunch/pkg/authn/enums/operator"
+	"github.com/constXife/go-authcrunch/pkg/identity"
+	"github.com/constXife/go-authcrunch/pkg/ids"
+	"github.com/constXife/go-authcrunch/pkg/requests"
+	"github.com/constXife/go-authcrunch/pkg/user"
 )
 
 // TestUserAppTokenPasscode tests app multi factor authenticator passcode.

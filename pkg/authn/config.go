@@ -19,15 +19,15 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/greenpau/go-authcrunch/pkg/acl"
-	"github.com/greenpau/go-authcrunch/pkg/authn/cookie"
-	"github.com/greenpau/go-authcrunch/pkg/authn/transformer"
-	"github.com/greenpau/go-authcrunch/pkg/authn/ui"
-	"github.com/greenpau/go-authcrunch/pkg/authz/options"
-	"github.com/greenpau/go-authcrunch/pkg/errors"
-	"github.com/greenpau/go-authcrunch/pkg/kms"
-	"github.com/greenpau/go-authcrunch/pkg/redirects"
-	cfgutil "github.com/greenpau/go-authcrunch/pkg/util/cfg"
+	"github.com/constXife/go-authcrunch/pkg/acl"
+	"github.com/constXife/go-authcrunch/pkg/authn/cookie"
+	"github.com/constXife/go-authcrunch/pkg/authn/transformer"
+	"github.com/constXife/go-authcrunch/pkg/authn/ui"
+	"github.com/constXife/go-authcrunch/pkg/authz/options"
+	"github.com/constXife/go-authcrunch/pkg/errors"
+	"github.com/constXife/go-authcrunch/pkg/kms"
+	"github.com/constXife/go-authcrunch/pkg/redirects"
+	cfgutil "github.com/constXife/go-authcrunch/pkg/util/cfg"
 )
 
 const (

@@ -19,7 +19,7 @@ import (
 
 	"testing"
 
-	"github.com/greenpau/go-authcrunch/internal/tests"
+	"github.com/constXife/go-authcrunch/internal/tests"
 )
 
 func TestParseRedirectURI(t *testing.T) {

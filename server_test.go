@@ -18,22 +18,22 @@ import (
 	"fmt"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/greenpau/go-authcrunch/internal/tests"
-	"github.com/greenpau/go-authcrunch/internal/testutils"
-	"github.com/greenpau/go-authcrunch/pkg/acl"
-	"github.com/greenpau/go-authcrunch/pkg/authn"
+	"github.com/constXife/go-authcrunch/internal/tests"
+	"github.com/constXife/go-authcrunch/internal/testutils"
+	"github.com/constXife/go-authcrunch/pkg/acl"
+	"github.com/constXife/go-authcrunch/pkg/authn"
 
-	// "github.com/greenpau/go-authcrunch/pkg/authn/registration"
-	"github.com/greenpau/go-authcrunch/pkg/authz"
-	"github.com/greenpau/go-authcrunch/pkg/credentials"
+	// "github.com/constXife/go-authcrunch/pkg/authn/registration"
+	"github.com/constXife/go-authcrunch/pkg/authz"
+	"github.com/constXife/go-authcrunch/pkg/credentials"
 
-	// "github.com/greenpau/go-authcrunch/pkg/errors"
+	// "github.com/constXife/go-authcrunch/pkg/errors"
 	"testing"
 
-	"github.com/greenpau/go-authcrunch/pkg/idp"
-	"github.com/greenpau/go-authcrunch/pkg/ids"
-	"github.com/greenpau/go-authcrunch/pkg/messaging"
-	logutil "github.com/greenpau/go-authcrunch/pkg/util/log"
+	"github.com/constXife/go-authcrunch/pkg/idp"
+	"github.com/constXife/go-authcrunch/pkg/ids"
+	"github.com/constXife/go-authcrunch/pkg/messaging"
+	logutil "github.com/constXife/go-authcrunch/pkg/util/log"
 	"go.uber.org/zap"
 )
 
