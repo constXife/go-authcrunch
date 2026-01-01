@@ -40,54 +40,29 @@ func (b *IdentityProvider) validateAccessToken(state string, data map[string]int
 		return nil, errors.ErrIdentityProviderOAuthAccessTokenNotFound.WithArgs(b.config.IdentityTokenName)
 	}
 
-	token, err := jwtlib.Parse(tokenString, func(token *jwtlib.Token) (interface{}, error) {
-		switch {
-		case strings.HasPrefix(token.Method.Alg(), "RS"):
-			if _, validMethod := token.Method.(*jwtlib.SigningMethodRSA); !validMethod {
-				return nil, errors.ErrIdentityProviderOAuthAccessTokenSignMethodNotSupported.WithArgs(b.config.IdentityTokenName, token.Header["alg"])
+	keyFunc := func(tokenName string) jwtlib.Keyfunc {
+		return func(token *jwtlib.Token) (interface{}, error) {
+			switch {
+			case strings.HasPrefix(token.Method.Alg(), "RS"):
+				if _, validMethod := token.Method.(*jwtlib.SigningMethodRSA); !validMethod {
+					return nil, errors.ErrIdentityProviderOAuthAccessTokenSignMethodNotSupported.WithArgs(tokenName, token.Header["alg"])
+				}
+			case strings.HasPrefix(token.Method.Alg(), "ES"):
+				if _, validMethod := token.Method.(*jwtlib.SigningMethodECDSA); !validMethod {
+					return nil, errors.ErrIdentityProviderOAuthAccessTokenSignMethodNotSupported.WithArgs(tokenName, token.Header["alg"])
+				}
+			case token.Method.Alg() == "EdDSA":
+				if _, validMethod := token.Method.(*jwtlib.SigningMethodEd25519); !validMethod {
+					return nil, errors.ErrIdentityProviderOAuthAccessTokenSignMethodNotSupported.WithArgs(tokenName, token.Header["alg"])
+				}
+			case strings.HasPrefix(token.Method.Alg(), "HS"):
+				return nil, errors.ErrIdentityProviderOAuthAccessTokenSignMethodNotSupported.WithArgs(tokenName, token.Method.Alg())
 			}
-		case strings.HasPrefix(token.Method.Alg(), "ES"):
-			if _, validMethod := token.Method.(*jwtlib.SigningMethodECDSA); !validMethod {
-				return nil, errors.ErrIdentityProviderOAuthAccessTokenSignMethodNotSupported.WithArgs(b.config.IdentityTokenName, token.Header["alg"])
-			}
-		case token.Method.Alg() == "EdDSA":
-			if _, validMethod := token.Method.(*jwtlib.SigningMethodEd25519); !validMethod {
-				return nil, errors.ErrIdentityProviderOAuthAccessTokenSignMethodNotSupported.WithArgs(b.config.IdentityTokenName, token.Header["alg"])
-			}
-		case strings.HasPrefix(token.Method.Alg(), "HS"):
-			return nil, errors.ErrIdentityProviderOAuthAccessTokenSignMethodNotSupported.WithArgs(b.config.IdentityTokenName, token.Method.Alg())
-		}
 
-		if !b.disableKeyVerification && len(b.keys) == 0 {
-			b.logger.Warn(
-				"jwks keys empty, forcing refresh",
-				zap.String("identity_provider_name", b.config.Name),
-			)
-			if err := b.fetchKeysURL(); err != nil {
-				return nil, errors.ErrIdentityProviderOauthKeyFetchFailed.WithArgs(err)
-			}
-			b.logger.Debug(
-				"jwks keys refreshed",
-				zap.String("identity_provider_name", b.config.Name),
-				zap.Strings("jwks_kids", b.getJwksKeyIDs()),
-			)
-		}
-
-		keyID, found := token.Header["kid"].(string)
-		if !found {
-			// If key id is not found in the header, then try the first available key.
-			for _, key := range b.keys {
-				return key.GetPublic(), nil
-			}
-			// return nil, errors.ErrIdentityProviderOAuthAccessTokenKeyIDNotFound.WithArgs(b.config.IdentityTokenName)
-		}
-		key, exists := b.keys[keyID]
-		if !exists {
-			if !b.disableKeyVerification {
+			if !b.disableKeyVerification && len(b.keys) == 0 {
 				b.logger.Warn(
-					"jwks key id not found, forcing refresh",
+					"jwks keys empty, forcing refresh",
 					zap.String("identity_provider_name", b.config.Name),
-					zap.String("kid", keyID),
 				)
 				if err := b.fetchKeysURL(); err != nil {
 					return nil, errors.ErrIdentityProviderOauthKeyFetchFailed.WithArgs(err)
@@ -98,27 +73,77 @@ func (b *IdentityProvider) validateAccessToken(state string, data map[string]int
 					zap.Strings("jwks_kids", b.getJwksKeyIDs()),
 				)
 			}
-			key, exists = b.keys[keyID]
+
+			keyID, found := token.Header["kid"].(string)
+			if !found {
+				// If key id is not found in the header, then try the first available key.
+				for _, key := range b.keys {
+					return key.GetPublic(), nil
+				}
+				// return nil, errors.ErrIdentityProviderOAuthAccessTokenKeyIDNotFound.WithArgs(tokenName)
+			}
+			key, exists := b.keys[keyID]
 			if !exists {
-				return nil, errors.ErrIdentityProviderOAuthAccessTokenKeyIDNotRegistered.WithArgs(b.config.IdentityTokenName, keyID)
+				if !b.disableKeyVerification {
+					b.logger.Warn(
+						"jwks key id not found, forcing refresh",
+						zap.String("identity_provider_name", b.config.Name),
+						zap.String("kid", keyID),
+					)
+					if err := b.fetchKeysURL(); err != nil {
+						return nil, errors.ErrIdentityProviderOauthKeyFetchFailed.WithArgs(err)
+					}
+					b.logger.Debug(
+						"jwks keys refreshed",
+						zap.String("identity_provider_name", b.config.Name),
+						zap.Strings("jwks_kids", b.getJwksKeyIDs()),
+					)
+					key, exists = b.keys[keyID]
+					if !exists {
+						return nil, errors.ErrIdentityProviderOAuthAccessTokenKeyIDNotRegistered.WithArgs(tokenName, keyID)
+					}
+				}
+			}
+			return key.GetPublic(), nil
+		}
+	}
+
+	parseToken := func(tokenName, value string) (jwtlib.MapClaims, error) {
+		token, err := jwtlib.Parse(value, keyFunc(tokenName))
+		if err != nil {
+			return nil, errors.ErrIdentityProviderOAuthParseToken.WithArgs(tokenName, err)
+		}
+		if _, ok := token.Claims.(jwtlib.Claims); !ok && !token.Valid {
+			return nil, errors.ErrIdentityProviderOAuthInvalidToken.WithArgs(tokenName, value)
+		}
+		return token.Claims.(jwtlib.MapClaims), nil
+	}
+
+	claims, err := parseToken(b.config.IdentityTokenName, tokenString)
+	if err != nil {
+		return nil, err
+	}
+	if !b.disableNonce {
+		nonceClaims := claims
+		if _, exists := claims["nonce"]; !exists && b.config.IdentityTokenName == "access_token" {
+			if v, ok := data["id_token"]; ok {
+				idToken, ok := v.(string)
+				if !ok {
+					return nil, errors.ErrIdentityProviderOAuthNonceValidationFailed.WithArgs("id_token", "nonce not found")
+				}
+				idClaims, err := parseToken("id_token", idToken)
+				if err != nil {
+					return nil, errors.ErrIdentityProviderOAuthNonceValidationFailed.WithArgs("id_token", err)
+				}
+				nonceClaims = idClaims
 			}
 		}
-		return key.GetPublic(), nil
-	})
-
-	if err != nil {
-		return nil, errors.ErrIdentityProviderOAuthParseToken.WithArgs(b.config.IdentityTokenName, err)
-	}
-
-	if _, ok := token.Claims.(jwtlib.Claims); !ok && !token.Valid {
-		return nil, errors.ErrIdentityProviderOAuthInvalidToken.WithArgs(b.config.IdentityTokenName, tokenString)
-	}
-	claims := token.Claims.(jwtlib.MapClaims)
-	if _, exists := claims["nonce"]; !exists {
-		return nil, errors.ErrIdentityProviderOAuthNonceValidationFailed.WithArgs(b.config.IdentityTokenName, "nonce not found")
-	}
-	if err := b.state.validateNonce(state, claims["nonce"].(string)); err != nil {
-		return nil, errors.ErrIdentityProviderOAuthNonceValidationFailed.WithArgs(b.config.IdentityTokenName, err)
+		if _, exists := nonceClaims["nonce"]; !exists {
+			return nil, errors.ErrIdentityProviderOAuthNonceValidationFailed.WithArgs(b.config.IdentityTokenName, "nonce not found")
+		}
+		if err := b.state.validateNonce(state, nonceClaims["nonce"].(string)); err != nil {
+			return nil, errors.ErrIdentityProviderOAuthNonceValidationFailed.WithArgs(b.config.IdentityTokenName, err)
+		}
 	}
 
 	if !b.disableEmailClaimCheck {
