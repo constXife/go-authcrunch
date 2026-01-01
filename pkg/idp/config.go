@@ -63,6 +63,7 @@ func (cfg *IdentityProviderConfig) Validate() error {
 			"server_id",
 			"base_auth_url",
 			"metadata_url",
+			"jwks_url",
 			"identity_token_name",
 			"authorization_url",
 			"token_url",

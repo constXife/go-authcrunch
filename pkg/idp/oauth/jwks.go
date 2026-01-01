@@ -17,6 +17,7 @@ package oauth
 import (
 	"bytes"
 	"crypto/ecdsa"
+	"crypto/ed25519"
 	"crypto/elliptic"
 	"crypto/rsa"
 	"crypto/x509"
@@ -84,6 +85,22 @@ func (k *JwksKey) Validate() error {
 		case "HS256", "HS384", "HS512", "":
 		default:
 			return errors.ErrJwksKeyAlgoUnsupported.WithArgs(k.Algorithm, k.KeyID)
+		}
+	case "OKP":
+		switch k.Algorithm {
+		case "EdDSA", "":
+		default:
+			return errors.ErrJwksKeyAlgoUnsupported.WithArgs(k.Algorithm, k.KeyID)
+		}
+		switch k.Curve {
+		case "Ed25519":
+		case "":
+			return errors.ErrJwksKeyCurveEmpty.WithArgs(k.KeyID)
+		default:
+			return errors.ErrJwksKeyCurveUnsupported.WithArgs(k.Curve, k.KeyID)
+		}
+		if k.CoordX == "" {
+			return errors.ErrJwksKeyCurveCoordNotFound.WithArgs(k.KeyID)
 		}
 	case "":
 		return errors.ErrJwksKeyTypeEmpty.WithArgs(k.KeyID)
@@ -193,6 +210,15 @@ func (k *JwksKey) Validate() error {
 			return errors.ErrJwksKeyDecodeSharedSecret.WithArgs(k.KeyID, err)
 		}
 		k.publicKey = key
+	case "OKP":
+		b, err := base64.RawURLEncoding.DecodeString(k.CoordX)
+		if err != nil {
+			return errors.ErrJwksKeyDecodeCoord.WithArgs(k.KeyID, "X", err)
+		}
+		if len(b) != ed25519.PublicKeySize {
+			return errors.ErrJwksKeyCoordLength.WithArgs(k.KeyID, "X", len(b), ed25519.PublicKeySize)
+		}
+		k.publicKey = ed25519.PublicKey(b)
 	default:
 		return errors.ErrJwksKeyTypeNotImplemented.WithArgs(k.KeyID, k.KeyType, k)
 	}

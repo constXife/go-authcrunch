@@ -49,6 +49,10 @@ func (b *IdentityProvider) validateAccessToken(state string, data map[string]int
 			if _, validMethod := token.Method.(*jwtlib.SigningMethodECDSA); !validMethod {
 				return nil, errors.ErrIdentityProviderOAuthAccessTokenSignMethodNotSupported.WithArgs(b.config.IdentityTokenName, token.Header["alg"])
 			}
+		case token.Method.Alg() == "EdDSA":
+			if _, validMethod := token.Method.(*jwtlib.SigningMethodEd25519); !validMethod {
+				return nil, errors.ErrIdentityProviderOAuthAccessTokenSignMethodNotSupported.WithArgs(b.config.IdentityTokenName, token.Header["alg"])
+			}
 		case strings.HasPrefix(token.Method.Alg(), "HS"):
 			return nil, errors.ErrIdentityProviderOAuthAccessTokenSignMethodNotSupported.WithArgs(b.config.IdentityTokenName, token.Method.Alg())
 		}

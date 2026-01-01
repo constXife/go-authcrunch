@@ -15,6 +15,9 @@
 package oauth
 
 import (
+	"crypto/ed25519"
+	"crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"github.com/greenpau/go-authcrunch/internal/tests"
 	"github.com/greenpau/go-authcrunch/pkg/errors"
@@ -22,6 +25,12 @@ import (
 )
 
 func TestValidateJwksKey(t *testing.T) {
+	edPub, _, err := ed25519.GenerateKey(rand.Reader)
+	if err != nil {
+		t.Fatalf("failed to generate ed25519 key: %v", err)
+	}
+	edKey := base64.RawURLEncoding.EncodeToString(edPub)
+
 	var testcases = []struct {
 		name      string
 		input     *JwksKey
@@ -239,6 +248,16 @@ func TestValidateJwksKey(t *testing.T) {
 				Algorithm:    "HS256",
 				KeyType:      "oct",
 				SharedSecret: "FdFYFzERwC2uCBB46pZQi4GG85LujR8obt-KWRBICVQ",
+			},
+		},
+		{
+			name: "valid Ed25519 key",
+			input: &JwksKey{
+				KeyID:     "0",
+				KeyType:   "OKP",
+				Algorithm: "EdDSA",
+				Curve:     "Ed25519",
+				CoordX:    edKey,
 			},
 		},
 	}

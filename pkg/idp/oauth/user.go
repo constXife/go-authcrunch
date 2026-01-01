@@ -20,13 +20,12 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"go.uber.org/zap"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
-
-	"go.uber.org/zap"
 )
 
 type discordMember struct {
@@ -346,9 +345,6 @@ func (b *IdentityProvider) fetchClaims(tokenData map[string]interface{}) (map[st
 	case "discord":
 		m["sub"] = "discord.com/" + data["id"].(string)
 		m["name"] = data["username"]
-		if v, exists := data["discriminator"]; exists {
-			m["discriminator"] = v
-		}
 		m["picture"] = fmt.Sprintf("https://cdn.discordapp.com/avatars/%s/%s.png", data["id"], data["avatar"])
 		if _, exists := data["email"]; exists {
 			m["email"] = data["email"]

@@ -178,6 +178,9 @@ func (b *IdentityProvider) Configure() error {
 	if b.config.TokenURL != "" {
 		b.tokenURL = b.config.TokenURL
 	}
+	if b.config.JwksURL != "" {
+		b.keysURL = b.config.JwksURL
+	}
 
 	if b.config.TLSInsecureSkipVerify {
 		b.browserConfig = &browserConfig{
@@ -373,6 +376,9 @@ func (b *IdentityProvider) fetchMetadataURL() error {
 	b.authorizationURL = b.metadata["authorization_endpoint"].(string)
 	b.tokenURL = b.metadata["token_endpoint"].(string)
 	b.keysURL = b.metadata["jwks_uri"].(string)
+	if b.config.JwksURL != "" {
+		b.keysURL = b.config.JwksURL
+	}
 	if _, exists := b.metadata["userinfo_endpoint"]; exists {
 		b.userInfoURL = b.metadata["userinfo_endpoint"].(string)
 	}
