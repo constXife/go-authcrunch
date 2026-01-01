@@ -58,6 +58,21 @@ func (b *IdentityProvider) validateAccessToken(state string, data map[string]int
 			return nil, errors.ErrIdentityProviderOAuthAccessTokenSignMethodNotSupported.WithArgs(b.config.IdentityTokenName, token.Method.Alg())
 		}
 
+		if !b.disableKeyVerification && len(b.keys) == 0 {
+			b.logger.Warn(
+				"jwks keys empty, forcing refresh",
+				zap.String("identity_provider_name", b.config.Name),
+			)
+			if err := b.fetchKeysURL(); err != nil {
+				return nil, errors.ErrIdentityProviderOauthKeyFetchFailed.WithArgs(err)
+			}
+			b.logger.Debug(
+				"jwks keys refreshed",
+				zap.String("identity_provider_name", b.config.Name),
+				zap.Strings("jwks_kids", b.getJwksKeyIDs()),
+			)
+		}
+
 		keyID, found := token.Header["kid"].(string)
 		if !found {
 			// If key id is not found in the header, then try the first available key.

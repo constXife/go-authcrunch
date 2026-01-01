@@ -385,6 +385,12 @@ func (b *IdentityProvider) fetchMetadataURL() error {
 	if b.config.JwksURL == "" {
 		b.keysURL = b.metadata["jwks_uri"].(string)
 	}
+	b.logger.Debug(
+		"resolved jwks url",
+		zap.String("identity_provider_name", b.config.Name),
+		zap.String("jwks_url", b.keysURL),
+		zap.Int("jwks_key_count", len(b.keys)),
+	)
 	if _, exists := b.metadata["userinfo_endpoint"]; exists {
 		b.userInfoURL = b.metadata["userinfo_endpoint"].(string)
 	}
