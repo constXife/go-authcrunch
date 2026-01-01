@@ -471,6 +471,13 @@ func (b *IdentityProvider) fetchKeysURL() error {
 		b.keys[k.KeyID] = k
 	}
 
+	b.logger.Info("jwks keys updated",
+		zap.String("identity_provider_name", b.config.Name),
+		zap.String("jwks_url", b.keysURL),
+		zap.Int("jwks_key_count", len(b.keys)),
+		zap.Strings("jwks_kids", b.getJwksKeyIDs()),
+	)
+
 	return nil
 }
 
